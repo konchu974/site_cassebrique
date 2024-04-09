@@ -12,10 +12,6 @@ if(isset($_FILES['picture'])){
   $maxSize = 400000;
 }
   if(in_array($extension, $extensions) && $size <= $maxSize && $error == 0){
-    $uniqueName = uniqid('', true);
-      //uniqid génère quelque chose comme ca : 5f586bf96dcd38.73540086
-      $file = $uniqueName.".".$extension;
-      //$file = 5f586bf96dcd38.73540086.jpg
     
     move_uploaded_file($tmpName, '../asset/'.$name);
   }
@@ -39,7 +35,6 @@ $prenom = (isset($_POST['prenom'])) ? $_POST['prenom'] : "";
 $sexe = (isset($_POST['inlineRadioOptions'])) ? $_POST['inlineRadioOptions'] : "";
 $picture = $uniqueName.".".$extension;
 //$file = 5f586bf96dcd38.73540086.jpg
-move_uploaded_file($tmpName, './upload/'.$file);
 
 
 
@@ -109,7 +104,7 @@ $stmt->bindParam(':login', $login);
 $stmt->execute();
 
 if ($row = $stmt->fetch()) {
-    if ((int)$row["cnt"] != 0) {
+    if ((int)$row["cnt"] != 0 || $row["pseudo"] == "Admin") {
         $msg = "Login already exists in DB.";
     }
 } else {
@@ -132,7 +127,7 @@ $stmt->bindParam(':prenom', $prenom);
 $stmt->bindParam(':login', $login);
 $stmt->bindParam(':password', $pwd_unhashed);
 $stmt->bindParam(':sexe', $sexe);
-$stmt->bindParam(':picture', $picture); 
+$stmt->bindParam(':picture', $name); 
 $stmt->execute();
 
 
@@ -143,6 +138,5 @@ $stmt->execute();
 //renvoie a la page
 $msg = $login;
 
-header("Location: ../front/Homepage.html");
+header("Location: ../front/Homepage.php");
 exit();
-

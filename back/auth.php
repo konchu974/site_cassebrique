@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $login = isset($_POST['pseudo']) ? $_POST['pseudo'] : "";
 $pwd_unhashed = isset($_POST['password']) ? $_POST['password'] : "";
 //------------------------------------  
-                                               
+
 if (
     $login == "" ||
     $pwd_unhashed == ""
@@ -58,6 +58,10 @@ try {
 
 $msg = "";
 
+
+
+
+
 $sql = "SELECT *
             FROM utilisateur
             WHERE pseudo = :login";
@@ -70,6 +74,7 @@ if ($stmt->rowCount() == 1) {
     $imgpro = $row['photo_pro'];
     $pwd_hashed = $row["mdp"];
     $user_id = $row["id_utilisateur"];
+    $score = $row["score"];
 
     if ($pwd_unhashed == $pwd_hashed) {
 
@@ -82,6 +87,7 @@ if ($stmt->rowCount() == 1) {
         // \____/ \___|\__| \____/\____/\____/\____/ \___/ \___/\_| \_/
         //------------------------------------
         $_SESSION['user_img'] = $imgpro;
+        $_SESSION['score'] = $score;
         $_SESSION['user'] = $login;
         $_SESSION['loggedIn'] = true;
         $_SESSION['user_id'] = $user_id;
@@ -97,11 +103,13 @@ if ($stmt->rowCount() == 1) {
 
 
 //------------------------------------
-            
+
 if ($msg != "") {
     header("Location: error.php?msg=" . $msg);
     exit();
+} else if ($login == "Admin") {
+    header("Location: ../front/admin.php");
 } else {
-    header("Location: ../front/Homepage.html");
+    header("Location: ../front/gamepage.php");
 }
 //------------------------------------

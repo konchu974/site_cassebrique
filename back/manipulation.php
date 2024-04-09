@@ -16,21 +16,18 @@ try {
     // Connexion à la base de données
     $pdo_conn = new PDO($dsn, $user, $password, $options);
 
-    // Requête récupére les playlists avec leurs musiques
-    $sql = "SELECT *
-    FROM jeux_
-    ";
+
+    $sql = "SELECT j.*, c.*
+        FROM jeux_ j
+        LEFT JOIN creer cr ON j.Id_Jeux_ = cr.Id_Jeux_
+        LEFT JOIN createur c ON cr.Id_createur = c.Id_createur";
+
 
 
     $stmt = $pdo_conn->query($sql);
 
     $current_jeux = null;
     $current_jeux_id = null;
-
-
-
-
-
 } catch (PDOException $e) {
     echo "Erreur: " . $e->getMessage();
 }
